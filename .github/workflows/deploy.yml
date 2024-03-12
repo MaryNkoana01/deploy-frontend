@@ -1,0 +1,59 @@
+name: AzureStaticWebAppDeployment
+
+on:
+  push:
+    branches:
+      - main
+
+env:
+  GITHUB_USER_NAME: ${{ secrets.USER_NAME }}
+  AZURE_LOCATION: "westus2"
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: azure/login@v1
+        with:
+          creds: ${{ secrets.AZURE_CREDENTIALS }}
+
+      - name: Create Azure Resource Group
+        run: |
+          az group create \
+            --name frontend-group \
+            --location ${{ env.AZURE_LOCATION }}
+      - name: Get Repository Name
+        id: repo_name
+        run: echo "::set-output name=name::${{ github.event.repository.name }}"
+
+      - name: Deploy Static Web App to Azure
+        run: |
+          az staticwebapp create \
+            --name ${{ steps.repo_name.outputs.name }} \
+            --resource-group frontend-group \
+            --source "https://github.com/${{ env.GITHUB_USER_NAME }}/${{ steps.repo_name.outputs.name }}" \
+            --location ${{ env.AZURE_LOCATION }} \
+            --branch main \
+            --app-location "src" \
+            --output-location "build"  \
+            --login-with-github
+      - name: Check Deployment Status
+        run: |
+          az staticwebapp show \
+            --name ${{ steps.repo_name.outputs.name }} \
+            --query "defaultHostname"
+
+            
+      # - name: Deploy Files to Static Web App
+      #   run: |
+      #     az staticwebapp appservice appsettings set \
+      #       --name "${{ steps.repo_name.outputs.name }}" \
+      #       --resource-group my-group \
+      #       --setting WEBSITE_RUN_FROM_PACKAGE=https://github.com/${{ env.GITHUB_USER_NAME }}/${{ steps.repo_name.outputs.name }} }}/archive/main.zip \
+      #       --subscription "${{ secrets.AZURE_SUBSCRIPTION_ID }}"
+
+      # - name: Deploy to Azure Static Web App
+      #   uses: azure/webapps-deploy@v2
+      #   with:
+      #     app-name: frontend-group
+      #     package: src
