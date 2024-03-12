@@ -35,12 +35,15 @@ jobs:
             --location ${{ env.AZURE_LOCATION }} \
             --branch main \
             --app-location "src" \
+            --output-location "build"  \
             --login-with-github
       - name: Check Deployment Status
         run: |
           az staticwebapp show \
             --name ${{ steps.repo_name.outputs.name }} \
             --query "defaultHostname"
+
+            
       # - name: Deploy Files to Static Web App
       #   run: |
       #     az staticwebapp appservice appsettings set \
