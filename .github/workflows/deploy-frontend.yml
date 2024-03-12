@@ -52,8 +52,8 @@ jobs:
       #       --setting WEBSITE_RUN_FROM_PACKAGE=https://github.com/${{ env.GITHUB_USER_NAME }}/${{ steps.repo_name.outputs.name }} }}/archive/main.zip \
       #       --subscription "${{ secrets.AZURE_SUBSCRIPTION_ID }}"
 
-      - name: Deploy to Azure Static Web App
-        uses: azure/webapps-deploy@v2
-        with:
-          app-name: frontend-group
-          package: src
+      # - name: Deploy to Azure Static Web App
+      #   uses: azure/webapps-deploy@v2
+      #   with:
+      #     app-name: frontend-group
+      #     package: src
