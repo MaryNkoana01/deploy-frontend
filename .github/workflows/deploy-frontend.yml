@@ -52,5 +52,5 @@ jobs:
       - name: Deploy to Azure Static Web App
         uses: azure/webapps-deploy@v2
         with:
-          app-name: ${{ steps.repo_name.outputs.name }}
+          app-name: frontend-group
           package: src
