@@ -20,7 +20,7 @@ jobs:
       - name: Create Azure Resource Group
         run: |
           az group create \
-            --name my-group \
+            --name frontend-group \
             --location ${{ env.AZURE_LOCATION }}
       - name: Get Repository Name
         id: repo_name
@@ -30,7 +30,7 @@ jobs:
         run: |
           az staticwebapp create \
             --name ${{ steps.repo_name.outputs.name }} \
-            --resource-group my-group \
+            --resource-group frontend-group \
             --source "https://github.com/${{ env.GITHUB_USER_NAME }}/${{ steps.repo_name.outputs.name }}" \
             --location ${{ env.AZURE_LOCATION }} \
             --branch main \
